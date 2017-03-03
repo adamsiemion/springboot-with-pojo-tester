@@ -1,0 +1,50 @@
+buildscript {
+	ext {
+		springBootVersion = '1.4.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+jar {
+	baseName = 'springboot-with-pojo-tester'
+	version = '0.0.1-SNAPSHOT'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'commons-io:commons-io:2.5'
+    compile 'com.google.guava:guava:21.0'
+    compile 'io.springfox:springfox-swagger2:2.6.0'
+    compile 'io.springfox:springfox-swagger-ui:2.6.0'
+    compile 'org.apache.commons:commons-lang3:3.5'
+    compile 'commons-collections:commons-collections:3.2.1'
+    runtime 'mysql:mysql-connector-java'
+    compileOnly 'org.projectlombok:lombok'
+
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+
+    // with below dependency Spring fails to start due to
+    // Caused by: java.lang.IllegalArgumentException: LoggerFactory is not a Logback LoggerContext but Logback is on the classpath. Either remove Logback or the competing implementation (class org.slf4j.impl.SimpleLoggerFactory loaded from file:/Users/adko/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.22/595058a6ec00a6e58f2f48113e8708f036a19cf7/slf4j-simple-1.7.22.jar). If you are using WebLogic you will need to add 'org.slf4j' to prefer-application-packages in WEB-INF/weblogic.xml Object of class [org.slf4j.impl.SimpleLoggerFactory] must be an instance of class ch.qos.logback.classic.LoggerContext
+     testCompile ('pl.pojo:pojo-tester:0.7.3')
+
+    // it works when slf4j-simple is excluded
+//    testCompile ('pl.pojo:pojo-tester:0.7.3') {
+//        exclude group: "org.slf4j", module: "slf4j-simple"
+//    }
+}
